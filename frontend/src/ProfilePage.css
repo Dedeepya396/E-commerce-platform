@@ -1,0 +1,27 @@
+.profile-box{
+  margin-left: 20%;
+  margin-right: 20%;
+  padding: 20px;
+  background-color:white;
+  border-radius:20px;
+  box-shadow: grey;
+  border: 1px solid rgb(97, 97, 97);
+}
+
+.profile-page{
+  padding: 10px;
+  background-color:lightgrey;
+  min-height: 100vh;
+}
+.det_box{
+  border: 1px solid rgb(204, 202, 202);
+  border-radius: 28px;
+  padding: 10px;
+}
+
+.edit-box{
+  padding: 10px;
+}
+#profile-header{
+  margin-left: 39%;
+}

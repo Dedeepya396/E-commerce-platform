@@ -1,0 +1,54 @@
+@keyframes move {
+  0% {
+    transform: translateX(-25px);
+  }
+  50% {
+    transform: translateX(25px);
+  }
+  100% {
+    transform: translateX(-25px);
+  }
+}
+
+.Images {
+  display: flex;
+}
+
+.image-style {
+  width: 32%;
+  height: 200px;
+  border-radius: 10px;
+  margin-left: 1%;
+  animation: move 5s infinite;
+}
+
+.Front-button {
+  background-color:rgb(24, 136, 235);
+  color: white;
+  cursor: pointer;
+  font-size: large;
+}
+.Front-button:hover {
+  background-color: grey;
+}
+
+.header1 {
+  margin-left: 32%;
+  padding-top: 3%;
+  padding-bottom: 3%;
+  color: white;
+}
+
+.box {
+  background-color: whitesmoke;
+  min-height: 50px;
+  border: 1px solid black;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  font-size: 2rem;
+}
+#front-page {
+  background-color:grey;
+  min-height: 100vh;
+}

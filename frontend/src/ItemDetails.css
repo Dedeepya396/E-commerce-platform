@@ -1,0 +1,21 @@
+.ItemDet-box {
+  margin-left: 20%;
+  margin-right: 20%;
+  padding: 20px;
+  background-color: white;
+  border-radius: 20px;
+  border: 1px solid rgb(148, 146, 146);
+  box-shadow: grey;
+}
+
+.ItemDet-page {
+  padding: 10px;
+  background-color: lightgrey;
+  height: 100vh;
+}
+.edit-box {
+  padding: 10px;
+}
+.header-item {
+  margin-left: 38%;
+}

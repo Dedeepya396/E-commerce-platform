@@ -1,0 +1,13 @@
+.cost{
+    border: 2px solid;
+    margin-left: 90%;
+    font-size: larger;
+}
+#order{
+    border: 2px solid;
+    margin-left: 50%;
+    margin-right: 50%;
+}
+#cart{
+    margin-left: 47%;
+}

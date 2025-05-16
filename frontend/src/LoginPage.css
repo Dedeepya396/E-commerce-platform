@@ -1,0 +1,26 @@
+.login-box {
+  align-items: center;
+  box-shadow: grey;
+  background-color: white;
+  margin-left: 28%;
+  margin-right: 28%;
+  border-radius: 8px;
+  padding: 20px;
+  border: 1px solid black;
+}
+#login-page {
+  background-color: grey;
+  display: flexbox;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  min-height: 100vh;
+}
+#header {
+  margin-left: 44%;
+  color: white;
+}
+#link {
+  margin-left: 63%;
+}
