@@ -26,7 +26,7 @@ A college-centric e-commerce platform where IIIT-H students can buy and sell ite
 
 ---
 
-## 🚀 Running the App
+## Running the App
 
 ### Frontend
 ```bash
