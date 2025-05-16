@@ -1,24 +1,24 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
-const { MongoClient } = require("mongodb");
-app.use(cors());
 const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const { login, signup } = require("./routes/registration");
-const secretKey = "1289";
+const { MongoClient } = require("mongodb");
 const { ObjectId } = require("mongodb");
-const { hash } = require("crypto");
-const saltRounds = 10;
-const uri =
-  "mongodb+srv://satyadedeepya21:nemani2005@cluster0.bm8re.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
-require("dotenv").config();
 const bodyParser = require("body-parser");
 const OpenAI = require("openai");
+const jwt = require("jsonwebtoken");
+const { hash } = require("crypto");
+
+const { login, signup } = require("./routes/registration");
+const secretKey = process.env.SECRET_KEY;
+const saltRounds = process.env.SALT_ROUNDS;
+const uri = process.env.URI;
+require("dotenv").config();
 
 app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cors());
 
 if (!process.env.OPENAI_API_KEY) {
   console.error("Missing OpenAI API key! Please set OPENAI_API_KEY in .env");
