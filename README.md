@@ -1,29 +1,37 @@
 # Buy Sell@ IIIT-H
 
-### There are 10 pages in total. Front page, Login page, Signup page, Home page, Cart page, Orders page, Deliver items page, profile.
+A college-centric e-commerce platform where IIIT-H students can buy and sell items easily.
 
-### Front page `/` is the entry point to the website where user will be prompted to login/signup. After successful login/signup user will be redirected to `/profile`
+---
 
-### In profile page user details are displayed and an option to edit is given. I havent implemented change/forgot password as it isn't that safe to do so. Since emails should be unique, I haven't given an option to change email as well.
+## Pages & Flow
 
-### Home page `/search` displays all the items that iiit students are selling. Each item has an option to view. Also it has search functionality and filtering items based on category. I have assumed that inputs of search bar wont be space character
+- `/` (Front Page): Entry point with Login/Signup options.
+- `/profile`: User details with editable profile (email/password updates not supported).
+- `/search`: View, search, and filter items listed by other students.
+- `/item/:id`: Detailed item view with "Add to Cart" option.
+- `/additem`: List your own items for sale.
+- `/mycart`: View cart, total price, and place orders (OTP generated per item).
+- `/orders`: View items you've bought, sold, and pending orders.
+- `/deliver`: Sellers can view incoming orders and verify OTP to close transactions.
 
-### On clicking on a specific item, it will redirected to a an items page, where details of that item will be displayed. It also has an option to add that item to cart
+---
 
-### If the user wants to sell an item, then he can add item through the option `add Item`, where details of items will be asked. I have assumed that images for items are not necessary.
+## Features
 
-### Clicking on Myorders will redirect to `/orders` which contains the details of the orders placed, sold by me and the pending orders. For pending orders, otp will not remain till the seller closes the transaction
+- Google reCAPTCHA to prevent bot signups.
+- Chatbot using OpenAI API (session not persistent).
+- Smart filtering & search.
+- OTP-based delivery confirmation.
 
-### On clicking on MyCart it will redirect to `/mycart`, which displays the items present in my cart, along with total price of products present in the cart, along with an option to order. On ordering, random otps will be generated ``per item``
+---
 
-### Deliver Items redirects to `/deliver` which shows the orders received as seller. It displays the details of all the items that are being bought along with buyer name. Seller needs to enter an otp for every item/request to close the transaction. 
+## 🚀 Running the App
 
-
-## BONUS:
-### I have implemented chatbot using OpenAI api keys. It gives the response to users message based on context of present session. Although a session is not persistent when page is reloaded
-
-### I have implemented Google Recaptcha using google's api keys. A user will be prompted to solve the captcha to ensure that he isnt a robot.
-
-##
-
-### To start the webpage, for front end command is `npm start`, for backend it is `npm run dev`
+### Frontend
+```bash
+npm start
+```
+### Backend
+```bash
+npm run dev```
