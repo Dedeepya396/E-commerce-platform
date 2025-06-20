@@ -28,16 +28,16 @@ if (!process.env.OPENAI_API_KEY) {
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
-
+// function to validate phone number
 const CheckValidPhoneNumber = (phoneNumber) => {
   const PhoneNumberPattern = /^[2-9]{1}[0-9]{9}$/;
   return PhoneNumberPattern.test(phoneNumber);
 };
-
+// starting point server listens for requests on port 8000
 app.listen(8000, () => {
   console.log("Backend running on port 8000");
 });
-
+// adding a new item
 app.post("/", async (req, res) => {
   const { ItemName, Price, Description, Category, SellerMail } = req.body;
   const client = new MongoClient(uri);
@@ -70,15 +70,15 @@ app.post("/", async (req, res) => {
     await client.close();
   }
 });
-
+// when user logs in
 app.post("/login", async (req, res) => {
   login(req, res);
 });
-
+// when user signs up
 app.post("/signup", async (req, res) => {
   signup(req, res);
 });
-
+// gets the details of profile
 app.get("/profile", async (req, res) => {
   const { email } = req.query;
   console.log("profile:", email);
@@ -87,7 +87,7 @@ app.get("/profile", async (req, res) => {
     await client.connect();
     const db = client.db("sampleDatabase");
     const collection = db.collection("Username");
-    const user = await collection.findOne({ EmailAddr: email });
+    const user = await collection.findOne({ EmailAddr: email }); // get the user details through mail
     console.log(user);
     if (user) res.send(user);
     else res.status(400).json({ message: "Couldn't fetch user details :(" });
@@ -98,6 +98,7 @@ app.get("/profile", async (req, res) => {
     await client.close();
   }
 });
+// to search items from the items list
 app.get("/search", async (req, res) => {
   const client = new MongoClient(uri);
   const searchQuery = req.query.q || "";
@@ -106,11 +107,11 @@ app.get("/search", async (req, res) => {
     await client.connect();
     const db = client.db("sampleDatabase");
     const collection = db.collection("Items");
-
-    const query = searchQuery
+    // building a query where it searches items with name that matches with search query
+    const query = searchQuery // if search query exists build the query. regex -> partial matching option i -> case insensitive
       ? { name: { $regex: searchQuery, $options: "i" } }
       : {};
-    const items = await collection.find(query).toArray();
+    const items = await collection.find(query).toArray(); // get the list of items
     if (items.length > 0) {
       res.send(items);
     } else {
@@ -123,6 +124,8 @@ app.get("/search", async (req, res) => {
     await client.close();
   }
 });
+
+// to make the edits of profile
 app.put("/profile", async (req, res) => {
   const client = new MongoClient(uri);
   try {
@@ -133,9 +136,9 @@ app.put("/profile", async (req, res) => {
     const database = client.db("sampleDatabase");
     const users = database.collection("Username");
     console.log(mail);
-    const UpdateBy = { EmailAddr: mail };
+    const UpdateBy = { EmailAddr: mail }; // update the profile using mail
     if (!CheckValidPhoneNumber(ContactNumber)) {
-      return res.status(400).json({ message: "Enter valid phone number!" });
+      return res.status(400).json({ message: "Enter valid phone number!" }); // check whether new phn no is valid/not
     }
     // create updated data
     const updatedData = {
@@ -146,14 +149,15 @@ app.put("/profile", async (req, res) => {
         ContactNumber: ContactNumber,
       },
     };
-    const result = await users.updateOne(UpdateBy, updatedData);
+    const result = await users.updateOne(UpdateBy, updatedData); // update only one
     if (result.matchedCount > 0) {
+      // 1
       console.log("Details updated!");
       return res.status(200).json({ message: "Edits done!" });
     } else {
       return res
         .status(400)
-        .json({ message: "Couldn't find the user with given mail" });
+        .json({ message: "Couldn't find the user with given mail" }); // user doesnt exist case
     }
   } catch (error) {
     console.error("Error during editing details:", error);
@@ -162,7 +166,7 @@ app.put("/profile", async (req, res) => {
     await client.close();
   }
 });
-
+// page for an item with given id
 app.get("/search/:id", async (req, res) => {
   const client = new MongoClient(uri);
   const id = req.params.id;
@@ -171,7 +175,7 @@ app.get("/search/:id", async (req, res) => {
     await client.connect();
     const db = client.db("sampleDatabase");
     const collection = db.collection("Items");
-    const items = await collection.findOne({ _id: new ObjectId(id) });
+    const items = await collection.findOne({ _id: new ObjectId(id) }); // find the item with given id
     console.log(items);
     if (items) {
       res.send(items);
@@ -186,6 +190,7 @@ app.get("/search/:id", async (req, res) => {
   }
 });
 
+//adding an item to cart
 app.post("/search/:id", async (req, res) => {
   const client = new MongoClient(uri);
   const {
@@ -211,7 +216,7 @@ app.post("/search/:id", async (req, res) => {
       Description: Description,
       BuyerMail: BuyerEmail,
     };
-    const result = await collection.insertOne(NewItem);
+    const result = await collection.insertOne(NewItem); // insert new item
     console.log("Item added to cart!");
     res.status(201).json({ message: "Item added to cart!" });
   } catch (error) {
@@ -222,6 +227,7 @@ app.post("/search/:id", async (req, res) => {
   }
 });
 
+// get all the cart items of user
 app.get("/mycart", async (req, res) => {
   const client = new MongoClient(uri);
   const BuyerEmail = req.query.mail;
@@ -230,7 +236,7 @@ app.get("/mycart", async (req, res) => {
     const db = client.db("sampleDatabase");
     const collection = db.collection("Cart");
     const cartItems = await collection
-      .find({ BuyerMail: BuyerEmail })
+      .find({ BuyerMail: BuyerEmail }) // find them by mail and convert them to array for easy access
       .toArray();
     console.log(cartItems);
     if (cartItems.length > 0) {
@@ -246,6 +252,7 @@ app.get("/mycart", async (req, res) => {
   }
 });
 
+// remove an item from the cart using the id of the item
 app.delete("/mycart", async (req, res) => {
   const client = new MongoClient(uri);
   const id = req.query.id;
@@ -268,8 +275,9 @@ app.delete("/mycart", async (req, res) => {
   }
 });
 
+// gives the details of the orders of the user
 app.get("/orders", async (req, res) => {
-  const { mail, type } = req.query;
+  const { mail, type } = req.query; // the type of orders that the buyer wants to see -> pending/placed/sold
 
   try {
     const client = new MongoClient(uri);
@@ -282,7 +290,7 @@ app.get("/orders", async (req, res) => {
     switch (type) {
       case "Pending":
         result = await collection
-          .find({ Status: "Pending", BuyerMail: mail })
+          .find({ Status: "Pending", BuyerMail: mail }) // find he orders based on type of orders and the user mail
           .toArray();
         break;
       case "Placed":
@@ -309,7 +317,7 @@ app.get("/orders", async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 });
-
+// add an item to the orders and delete it from the cart
 app.post("/mycart", async (req, res) => {
   const {
     Cart_id,
@@ -330,9 +338,10 @@ app.post("/mycart", async (req, res) => {
     const db = client.db("sampleDatabase");
     const cartCollection = db.collection("Cart");
     const usercollection = db.collection("Username");
-    const user = await usercollection.findOne({ EmailAddr: BuyerMail });
+    const user = await usercollection.findOne({ EmailAddr: BuyerMail }); // get the user name from db
     const buyerName = user.Lname;
     const removeItem = await cartCollection.deleteOne({
+      // delete the item from cart
       _id: new ObjectId(Cart_id),
     });
 
@@ -352,7 +361,7 @@ app.post("/mycart", async (req, res) => {
       BuyerMail: BuyerMail,
       Status: Status,
       otp: hashedOtp,
-    };
+    }; // hash the otp and add to cart
     const result = collection.insertOne(newItem);
     if (result) {
       res.status(200).send({ message: "Order placed for item " });
@@ -362,7 +371,7 @@ app.post("/mycart", async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 });
-
+// returns a list of orders that are pending and seller has to close them
 app.get("/deliver", async (req, res) => {
   const { mail } = req.query;
   try {
@@ -374,7 +383,7 @@ app.get("/deliver", async (req, res) => {
     const result = await collection
       .find({
         SellerMail: mail,
-        Status: "Pending",
+        Status: "Pending", // pending orders of user(seller) through his mail
       })
       .toArray();
     console.log(result, result.length);
@@ -387,6 +396,7 @@ app.get("/deliver", async (req, res) => {
   }
 });
 
+// close transaction by entering otp
 app.post("/deliver", async (req, res) => {
   const { otp, itemId } = req.body;
   try {
@@ -394,12 +404,12 @@ app.post("/deliver", async (req, res) => {
     await client.connect();
     const db = client.db("sampleDatabase");
     const collection = db.collection("Orders");
-    const result = await collection.findOne({ _id: new ObjectId(itemId) });
+    const result = await collection.findOne({ _id: new ObjectId(itemId) }); // get the otp from item id
     const hashedOtp = result.otp;
-    const isOtpCorrect = await bcrypt.compare(otp, hashedOtp);
+    const isOtpCorrect = await bcrypt.compare(otp, hashedOtp); // check the otp
     if (isOtpCorrect) {
       res.status(200).json({ message: "Transaction success!!" });
-      const UpdateBy = { _id: new ObjectId(itemId) };
+      const UpdateBy = { _id: new ObjectId(itemId) }; // update the status of item as sold through id
       const updatedData = {
         $set: {
           Status: "Sold",
@@ -428,10 +438,11 @@ app.post("/chatbot", async (req, res) => {
 
     const chatCompletion = await openai.chat.completions.create({
       model: "gpt-4o-mini",
-      messages: [{ role: "user", content: message }],
+      messages: [{ role: "user", content: message }], // sends the message to the model using chat completion model -> messages are structured as
+      // messages
     });
 
-    res.json({ content: chatCompletion.choices[0].message.content });
+    res.json({ content: chatCompletion.choices[0].message.content }); //sends the response to the client
     console.log(chatCompletion.choices[0].message);
   } catch (error) {
     console.error("Error communicating with OpenAI:", error);

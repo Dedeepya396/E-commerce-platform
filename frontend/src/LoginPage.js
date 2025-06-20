@@ -8,6 +8,7 @@ import "react-toastify/dist/ReactToastify.css";
 import ReCAPTCHA from "react-google-recaptcha";
 
 function LoginDetails() {
+  // use states to set email and passwords of user
   const [emailAddr, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -18,20 +19,20 @@ function LoginDetails() {
   const handleLoginSubmission = (e) => {
     e.preventDefault();
     console.log(emailAddr);
-    axios
+    axios// send a post request to backend with user details for verification
       .post("http://localhost:8000/login", { emailAddr, password })
       .then((response) => {
-        // alert(response.data.message);
+        // alert(response.data.message);// if response is success store the token in local storage
         console.log("Token:", response.data.token);
         localStorage.setItem("sessionToken", response.data.token);
         toast.success("Login Successful!", {
           // position: toast.POSITION.TOP_CENTER,
         });
-        navigate("/profile");
+        navigate("/profile");// redirect to profile page
       })
       .catch((error) => {
         // alert(error.response.data.message);
-        toast.error(error.response.data.message, {
+        toast.error(error.response.data.message, { // display the error
           // position: toast.POSITION.TOP_CENTER,
         });
       });
@@ -75,7 +76,7 @@ function LoginDetails() {
             <br />
             <ReCAPTCHA
               sitekey="6LdydssqAAAAAJZ2AUgQPHPPbM5a7tGQM3Php7wS"
-              onChange={onChange}
+              onChange={onChange} // a debugging function
             />
             <br/>
             <button type="submit" className="btn btn-primary">
@@ -85,7 +86,7 @@ function LoginDetails() {
             <button
               type="submit"
               className="btn btn-link"
-              onClick={handleSignup}
+              onClick={handleSignup} // if user is not registered -> button to go there
               id="link"
             >
               New User? Signup!

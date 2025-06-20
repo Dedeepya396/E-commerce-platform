@@ -19,6 +19,7 @@ function Cart() {
   const [filteredcartItems, setFilteredcartItems] = useState(null);
 
   const getMail = () => {
+    // we get the email of user from token
     const token = localStorage.getItem("sessionToken");
     if (!token) {
       console.error("No token found");
@@ -37,17 +38,18 @@ function Cart() {
   const getcartItems = () => {
     getMail();
     console.log("Mail:", mail);
-    axios
+    axios // we send a get request with mail as a parameter
       .get(`http://localhost:8000/mycart`, {
         params: { mail },
       })
       .then((response) => {
+        // if success set the cart items with response.data
         setcartItems(response.data);
-        setError("");
+        setError(""); // remove the elements where buyer is not seller
         const filteredItems = response.data.filter(
           (item) => item.SellerMail !== mail
         );
-        setFilteredcartItems(filteredItems);
+        setFilteredcartItems(filteredItems); // then store the final items
       })
       .catch((error) => {
         setcartItems(null);
@@ -62,9 +64,9 @@ function Cart() {
     console.log(mail);
     filteredcartItems.forEach((item) => {
       const otp = generateOTP();
-      console.log("OTP", otp);
+      console.log("OTP", otp); // generate an otp
       console.log(item._id);
-      axios
+      axios // send the post request to store this order with item details,buyer details,seller mail,order status,otp
         .post(`http://localhost:8000/mycart`, {
           Cart_id: item._id,
           ItemName: item.ItemName,
@@ -79,11 +81,13 @@ function Cart() {
         })
         .then((response) => {
           console.log("Order placed");
+          // intimate the user
           toast.success(`Order placed! otp:${otp} item:${item._id}`, {});
           setcartItems([]);
           setFilteredcartItems([]);
         })
         .catch((error) => {
+          // display error
           setError(error.response?.data?.message || "An error occurred");
           console.error("Error placing an order:", error);
           toast.error(error.response.data.message, {
@@ -104,19 +108,22 @@ function Cart() {
   const handleRemove = (id) => {
     axios
       .delete(`http://localhost:8000/mycart`, {
+        // send the request using id of the item
         params: { id },
       })
       .then((response) => {
         setError("");
         toast.success("Item removed!", {
+          // intimate the user abt removal
           // position: toast.POSITION.TOP_CENTER,
         });
-        setFilteredcartItems((prevItems) =>
-          prevItems.filter((item) => item._id !== id)
+        setFilteredcartItems(
+          (prevItems) => prevItems.filter((item) => item._id !== id) // remove the item with that id
         );
         console.log("Item removed!");
       })
       .catch((error) => {
+        // show error
         toast.error(error.response.data.message, {
           // position: toast.POSITION.TOP_CENTER,
         });
@@ -140,6 +147,8 @@ function Cart() {
           <p>Loading items...</p>
         ) : cartItems.length > 0 ? (
           <div className="row">
+            {" "}
+            {/**If items are present display them */}
             {filteredcartItems.map((item, index) => (
               <div className="col-md-3 mb-4" key={index}>
                 <div className="card h-100 bg-light">
@@ -159,7 +168,7 @@ function Cart() {
                     </p>
                     <button
                       className="btn btn-secondary"
-                      onClick={() => handleRemove(item._id)}
+                      onClick={() => handleRemove(item._id)} // remove the item by sending a request
                     >
                       Remove Item
                     </button>
@@ -172,7 +181,7 @@ function Cart() {
               <button
                 className="btn btn-secondary"
                 id="order"
-                onClick={handleOrder}
+                onClick={handleOrder} // total is calculated by the function and onclick handleOrder function gets triggered
               >
                 Order!
               </button>

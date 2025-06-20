@@ -9,16 +9,17 @@ import "bootstrap/dist/css/bootstrap.min.css";
 function FrontPage() {
   const navigate = useNavigate();
   const handleLogin = () => {
-    navigate("login/");
+    navigate("login/"); // if login button is pressed -> navigate to login/ url
   };
   const handleSignup = () => {
-    navigate("Signup/");
+    navigate("Signup/");// if signup button is pressed -> navigate to signup/ url
   };
   return (
     <div id="front-page">
       <div className="container">
         <br/>
         <div className="Images">
+          {/* Normal images for home page with translation*/}
           <img src={bs_icon} alt="bs_icon" className="image-style"></img>
           <img src={cart_image} alt="cart_image" className="image-style"></img>
           <img src={bs_chat} alt="bs_chat" className="image-style"></img>
@@ -28,7 +29,7 @@ function FrontPage() {
         <div className="row row-col-4">
           <div className="col ">
             <div className="box">
-              <h2>Already a user? Login</h2>
+              <h2>Already a user? Login</h2> {/*Login page */}
               <button className="Front-button" onClick={handleLogin}>
                 Login!
               </button>
@@ -37,7 +38,7 @@ function FrontPage() {
 
           <div className="col">
             <div className="box">
-              <h2>New user? Signup</h2>
+              <h2>New user? Signup</h2>{/*Signup page */}
               <button className="Front-button" onClick={handleSignup}>
                 Signup!
               </button>

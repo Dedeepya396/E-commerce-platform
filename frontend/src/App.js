@@ -12,15 +12,17 @@ import Order from "./Orders";
 import Deliver from "./Deliver";
 import Chatbot from "./chatbot";
 const sessionPersistence = () => {
+  // checks whether the token is present or not
   const token = localStorage.getItem("sessionToken");
+  // if token is present -> user should be redirected to protected routes
   if (token) return true;
   else return false;
 };
-
+// if user is logged in then will be taken to element page else it will be redirected to login page
 const ProtectedRoute = ({ element, redirectTo }) => {
   return sessionPersistence() ? element : <Navigate to={redirectTo} />;
 };
-
+// if user is logged in, they will be taken to (redirectTo) page else they will be taken to element page
 const PublicRoute = ({ element, redirectTo }) => {
   return sessionPersistence() ? <Navigate to={redirectTo} /> : element;
 };
@@ -30,24 +32,26 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route
-          path="/"
+          path="/" // homepath
           element={
+            // logged in -> take to profile page else take to home page
             <PublicRoute element={<FrontPage />} redirectTo="/profile" />
           }
         />
         <Route
-          path="/login"
+          path="/login" // if logged in -> profile else login
           element={
             <PublicRoute element={<LoginDetails />} redirectTo="/profile" />
           }
         />
         <Route
-          path="/signup"
+          path="/signup" // if logged in -> profile else signup page
           element={<PublicRoute element={<Signup />} redirectTo="/profile" />}
         />
         <Route
           path="/profile"
           element={
+            // if logged in go to profile page else redirects to login
             <ProtectedRoute
               element={
                 <Layout>
@@ -59,7 +63,7 @@ function App() {
           }
         />
         <Route
-          path="/search"
+          path="/search" // if logged in go to search page else redirects to login
           element={
             <ProtectedRoute
               element={
@@ -71,7 +75,7 @@ function App() {
             />
           }
         />
-        <Route
+        <Route // if logged in go to items page else redirects to login
           path="/search/:id"
           element={
             <ProtectedRoute
@@ -85,7 +89,7 @@ function App() {
           }
         />
         <Route
-          path="/mycart"
+          path="/mycart"  // if logged in go to cart page else redirects to login
           element={
             <ProtectedRoute
               element={
@@ -98,7 +102,7 @@ function App() {
           }
         />
         <Route
-          path="/orders"
+          path="/orders"  // if logged in go to orders page else redirects to login
           element={
             <ProtectedRoute
               element={
@@ -111,7 +115,7 @@ function App() {
           }
         />
         <Route
-          path="/deliver"
+          path="/deliver"  // if logged in go to deliver page else redirects to login
           element={
             <ProtectedRoute
               element={

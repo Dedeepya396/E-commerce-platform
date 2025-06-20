@@ -8,38 +8,42 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 function App() {
+  // use states to store profile of the user
   const [profile, setProfile] = useState(null);
   const [error, setError] = useState("");
   const navigate = useNavigate();
   let mail;
+  // a function to retrieve the email of current logged in user -> from local storage token
   const getEmail = () => {
     const token = localStorage.getItem("sessionToken");
     if (!token) {
       console.error("No token found");
       return;
     }
-    const payload = JSON.parse(atob(token.split(".")[1]));
-    mail = payload.emailAddr;
+    const payload = JSON.parse(atob(token.split(".")[1])); // split the token at . and take 2nd element
+    mail = payload.emailAddr; // retrieve mail
     console.log("mail:", mail);
   };
   const getProfileDetails = () => {
     console.log("func:", mail);
-    axios
+    axios // sends a get request to backend to get user details from database with email as parameter
       .get("http://localhost:8000/profile", {
         params: { email: mail },
       })
       .then((response) => {
+        // if response is success store the data of the response as profile of user
         setProfile(response.data);
         setError("");
         console.log("User details:", response.data);
       })
       .catch((error) => {
         setProfile(null);
+        // show an error
         setError(error.response?.data?.message || "An error occurred");
         console.error("Error fetching profile:", error);
       });
   };
-
+  // will run these functions before returning a page
   useEffect(() => {
     getEmail();
     getProfileDetails();
@@ -82,7 +86,7 @@ function App() {
     <div>
       {/* Put nav bar code here if needed */}
       <div className="profile-page">
-        {error ? (
+        {error ? ( // if there is an error show that error
           <p>{error}</p>
         ) : profile ? (
           <div className="container">
@@ -90,7 +94,7 @@ function App() {
             <div className="col gx-3">
               <div className="profile-box">
                 <div className="det_box">
-                  <div>First Name: &nbsp; {profile.Fname}</div>
+                  <div>First Name: &nbsp; {profile.Fname}</div> {/*Display the details of user from profile variable */}
                 </div>
                 <br />
 
@@ -121,7 +125,7 @@ function App() {
                     data-bs-toggle="modal"
                     data-bs-target="#modal"
                   >
-                    Edit
+                    Edit {/*Edit button which triggers a modal which allows user to edit their details */}
                   </button>
                   <div className="modal" id="modal">
                     <div className="modal-dialog">
@@ -136,7 +140,7 @@ function App() {
                           ></button>
                         </div>
                         <div className="container">
-                          <form onSubmit={handleEdits}>
+                          <form onSubmit={handleEdits}>{/**On submission edits will be handled */}
                             <div className="edit-box">
                               <div>
                                 <label htmlFor="First Name">First Name</label>
@@ -180,19 +184,6 @@ function App() {
                                 />
                               </div>
                               <br />
-                              {/* <div>
-                                <label htmlFor="password">Password</label>
-                                <input
-                                  type="password"
-                                  className="form-control"
-                                  id="password"
-                                  placeholder="Enter password"
-                                  required
-                                  onChange={(e) => setPassword(e.target.value)}
-                                />
-                              </div>
-                              <br /> */}
-
                               <div>
                                 <label htmlFor="age">Age</label>
                                 <input
@@ -220,9 +211,8 @@ function App() {
             </div>
           </div>
         ) : (
-          <p>Loading profile...</p>
+          <p>Loading profile...</p> // if profile is null show this 
         )}
-
       </div>
     </div>
   );

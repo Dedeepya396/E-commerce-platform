@@ -7,10 +7,10 @@ import "./searchItems.css";
 
 function SearchPage() {
   const navigate = useNavigate();
-  const [searchReq, setSearchreq] = useState("");
-  const [itemsList, setItems] = useState(null);
+  const [searchReq, setSearchreq] = useState(""); // stores the user's search request
+  const [itemsList, setItems] = useState(null); // stores the items based on search request
   const [error, setError] = useState("");
-  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [selectedCategories, setSelectedCategories] = useState([]); // stores selected categories
   const {
     handleSearch,
     handleOrders,
@@ -32,6 +32,7 @@ function SearchPage() {
 
   const handleCategoryChange = (category) => {
     if (selectedCategories.includes(category)) {
+      // if a category is already selected remove it else include it
       setSelectedCategories((prev) =>
         prev.filter((selected) => selected !== category)
       );
@@ -46,15 +47,15 @@ function SearchPage() {
   };
 
   const getItems = (query = "") => {
-    axios
+    axios // a get request will be sent with search query as a parameter
       .get(`http://localhost:8000/search?q=${query}`)
       .then((response) => {
-        setItems(response.data);
+        setItems(response.data); // store the items based on response
         setError("");
       })
       .catch((error) => {
         setItems(null);
-        setError(error.response?.data?.message || "An error occurred");
+        setError(error.response?.data?.message || "An error occurred"); // display error
       });
   };
 
@@ -68,14 +69,14 @@ function SearchPage() {
   }, []);
 
   const filteredItems = itemsList
-    ? itemsList.filter((item) =>
-        item.ItemName.toLowerCase().includes(searchReq.toLowerCase())
+    ? itemsList.filter(
+        (item) => item.ItemName.toLowerCase().includes(searchReq.toLowerCase()) //get items which have search req name
       )
     : [];
   const finalItems = filteredItems.filter(
     (item) =>
       selectedCategories.length === 0 ||
-      selectedCategories.includes(item.Category)
+      selectedCategories.includes(item.Category) // get items which contains category
   );
 
   return (
@@ -85,6 +86,7 @@ function SearchPage() {
       <h3>Categories</h3>
       <form>
         <div className="row">
+          {/**Display categories for filtering */}
           {categories.map((category, index) => (
             <div className="col" key={index}>
               <label htmlFor={category}>{category}</label>
@@ -92,7 +94,7 @@ function SearchPage() {
                 type="checkbox"
                 id={category}
                 onChange={() => handleCategoryChange(category)}
-                checked={selectedCategories.includes(category)}
+                checked={selectedCategories.includes(category)} // include clicked category
               />
             </div>
           ))}
@@ -101,6 +103,8 @@ function SearchPage() {
 
       <br />
       <form onSubmit={handleSearchReq}>
+        {" "}
+        {/**Items will be updated by the search request */} {/*A search bar */}
         <input
           type="text"
           className="form-control"
@@ -113,11 +117,13 @@ function SearchPage() {
       <br />
       <div>
         {error ? (
-          <p>{error}</p>
+          <p>{error}</p> // display error
         ) : finalItems === null ? (
-          <p>Loading items...</p>
+          <p>Loading items...</p> // if there are no items show loading items
         ) : finalItems.length > 0 ? (
           <div className="row">
+            {" "}
+            {/**Display items in an order */}
             {finalItems.map((item, index) => (
               <div className="col-md-3 mb-4" key={index}>
                 <div className="card h-100">
@@ -131,7 +137,7 @@ function SearchPage() {
                     </p>
                     <button
                       className="btn btn-secondary"
-                      onClick={() => handleClick(item._id)}
+                      onClick={() => handleClick(item._id)} //If user clicks on an item redirect it to its page
                     >
                       View Item
                     </button>

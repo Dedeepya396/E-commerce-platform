@@ -2,6 +2,9 @@ import React, { use, useState, useEffect } from "react";
 import axios from "axios";
 import "./orders.css";
 function Order() {
+  // pending are the orders that a seller has to approve
+  // placed are the orders placed by the buyer
+  // sold are the orders sold by the seller
   const [PendingCollapsed, setPendingCollapsed] = useState(false);
   const [PlacedCollapsed, setPlacedCollapsed] = useState(false);
   const [SoldCollapsed, setSoldCollapsed] = useState(false);
@@ -21,11 +24,11 @@ function Order() {
   };
 
   const togglePendingCollapse = () => {
-    setPendingCollapsed((prevState) => !prevState);
+    setPendingCollapsed((prevState) => !prevState); // toggling mechanism
     getEmail();
     if (!PendingCollapsed) {
       axios
-        .get("http://localhost:8000/orders", {
+        .get("http://localhost:8000/orders", { // get the details of pending orders
           params: { mail, type: "Pending" },
         })
         .then((response) => {
@@ -42,7 +45,7 @@ function Order() {
   const togglePlacedCollapse = () => {
     setPlacedCollapsed((prevState) => !prevState);
     getEmail();
-    if (!PlacedCollapsed) {
+    if (!PlacedCollapsed) {// get the details of  placed orders
       axios
         .get("http://localhost:8000/orders", {
           params: { mail, type: "Placed" },
@@ -61,7 +64,7 @@ function Order() {
   const toggleSoldCollapse = () => {
     setSoldCollapsed((prevState) => !prevState);
     getEmail();
-    if (!SoldCollapsed) {
+    if (!SoldCollapsed) { // gets the details of sold orders of the current seller
       axios
         .get("http://localhost:8000/orders", { params: { mail, type: "Sold" } })
         .then((response) => {
@@ -86,7 +89,7 @@ function Order() {
               onClick={togglePendingCollapse}
               className="btn btn-primary w-100"
             >
-              {PendingCollapsed ? "Hide" : "Show"} Pending orders
+              {PendingCollapsed ? "Hide" : "Show"} Pending orders{/**Button to acount for toggling */}
             </button>
             <div
               className={`collapse ${PendingCollapsed ? "show" : ""}`}
@@ -94,7 +97,7 @@ function Order() {
             >
               <br />
               <div className="row">
-                {PendingItems && PendingItems.length > 0 ? (
+                {PendingItems && PendingItems.length > 0 ? ( // diplays pending items
                   PendingItems.map((item, index) => (
                     <div className="row mb-3" key={index}>
                       <div className="col-12">
@@ -134,7 +137,7 @@ function Order() {
               {PlacedCollapsed ? "Hide" : "Show"} Placed Orders
             </button>
             <div
-              className={`collapse ${PlacedCollapsed ? "show" : ""}`}
+              className={`collapse ${PlacedCollapsed ? "show" : ""}`} // diplays placed items
               id="demo"
             >
               <br />
@@ -184,7 +187,7 @@ function Order() {
             >
               <br />
               <div className="row">
-                {SoldItems && SoldItems.length > 0 ? (
+                {SoldItems && SoldItems.length > 0 ? ( // diplays sold items
                   SoldItems.map((item, index) => (
                     <div className="row mb-3" key={index}>
                       <div className="col-12">

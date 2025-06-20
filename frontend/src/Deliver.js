@@ -27,7 +27,7 @@ function Deliver() {
     mail = payload?.emailAddr;
   };
 
-  const getDeliveryItems = () => {
+  const getDeliveryItems = () => { // get details of items which are to be delivered
     getMail();
     console.log("Mail:", mail);
     axios
@@ -83,7 +83,7 @@ function Deliver() {
         {error ? (
           <p>{error}</p>
         ) : DeliverItems === null ? (
-          <p>Loading items...</p>
+          <p>Loading items...</p> // displays items that are to be delivered
         ) : DeliverItems.length > 0 ? (
           <div className="row">
             {DeliverItems.map((item, index) => (
@@ -112,7 +112,8 @@ function Deliver() {
                         type="password"
                         className="form-control"
                         required
-                        onChange={(e) => setOtp(e.target.value)}
+                        onChange={(e) => setOtp(e.target.value)} // if we want to confirm an order enter otp and verify it
+                        // if otp is right -> order is confirmed
                       />
                       <br />
                       <button className="btn btn-secondary" type="submit">

@@ -7,9 +7,9 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 function ItemDetails() {
-  const [ItemDet, setItemDet] = useState(null);
-  const [error, setError] = useState("");
-  const { id } = useParams();
+  const [ItemDet, setItemDet] = useState(null); // stores item details 
+  const [error, setError] = useState(""); // stores error
+  const { id } = useParams(); // we get id from url parameter
   const {
     handleSearch,
     handleOrders,
@@ -19,12 +19,13 @@ function ItemDetails() {
     handleProfile,
   } = useNavBarHandlers();
   const getItemDetails = () => {
-    console.log("func:", id);
+    console.log("func:", id); 
     axios
-      .get(`http://localhost:8000/search/${id}`)
+      .get(`http://localhost:8000/search/${id}`) // we send a get request with id as a parameter
       .then((response) => {
         setItemDet(response.data);
         setError("");
+        //if success set the response data
         console.log("Item details:", response.data);
       })
       .catch((error) => {
@@ -36,6 +37,7 @@ function ItemDetails() {
   let mail;
   const AddtoCart = () => {
     if (ItemDet) {
+      // gets user details from token
       const token = localStorage.getItem("sessionToken");
       if (!token) {
         console.error("No token found");
@@ -52,7 +54,7 @@ function ItemDetails() {
       mail = payload?.emailAddr;
       if (mail !== ItemDet.SellerMail) {
         axios
-          .post(`http://localhost:8000/search/${id}`, {
+          .post(`http://localhost:8000/search/${id}`, { // sends a post request with buyer details and item details
             Name: ItemDet.ItemName,
             Price: ItemDet.Price,
             SellerMail: ItemDet.SellerMail,
@@ -63,11 +65,13 @@ function ItemDetails() {
           })
           .then((response) => {
             console.log("Item added to cart");
+            // if success intimate the user
             toast.success("Item added to cart!", {
               // position: toast.POSITION.TOP_CENTER,
             });
           })
           .catch((error) => {
+            // show the error
             setError(error.response?.data?.message || "An error occurred");
             console.error("Error fetching profile:", error);
             toast.error(error.response.data.message, {
@@ -79,6 +83,7 @@ function ItemDetails() {
       }
     }
   };
+  // run this function before returning
   useEffect(() => {
     getItemDetails();
   }, [id]);
@@ -86,7 +91,7 @@ function ItemDetails() {
     <div>
       {/* put nav bar code here if needed */}
       <div className="ItemDet-page">
-        {ItemDet ? (
+        {ItemDet ? ( // if there are item details display them
           <div className="container">
             <div className="col gx-3">
               <h1 className="header-item">Item Details</h1>
@@ -112,8 +117,8 @@ function ItemDetails() {
                 </div>
                 <br />
                 <div className="row">
-                  <button className="btn btn-secondary" onClick={AddtoCart}>
-                    Add to Cart
+                  <button className="btn btn-secondary" onClick={AddtoCart}> 
+                    Add to Cart {/*Adds to cart */}
                   </button>
                 </div>
               </div>

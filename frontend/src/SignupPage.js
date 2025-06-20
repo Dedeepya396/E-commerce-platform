@@ -7,6 +7,7 @@ import "react-toastify/dist/ReactToastify.css";
 import ReCAPTCHA from "react-google-recaptcha";
 
 function Signup() {
+  // use states to store the info entered by user and then to send to backend
   const [emailAddr, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [Fname, setFname] = useState("");
@@ -22,6 +23,7 @@ function Signup() {
   const handleSignupSubmission = (e) => {
     e.preventDefault();
     console.log(emailAddr);
+    // send a post request to backend with user details
     axios
       .post("http://localhost:8000/signup", {
         Fname,
@@ -33,17 +35,19 @@ function Signup() {
       })
       .then((response) => {
         // alert(response.data.message);
+        // if the respond is success store the token in local storage and indicate the same to user
         console.log("Token:", response.data.token);
         localStorage.setItem("sessionToken", response.data.token);
         toast.success("Signup Successful!", {
           // position: toast.POSITION.TOP_CENTER,
         });
-
+        // navigate to profile page
         navigate("/profile");
       })
       .catch((error) => {
         console.log(error);
         // alert(error.response.data.message);
+        // incase of an error display that
         toast.error(error.response.data.message, {
           // position: toast.POSITION.TOP_CENTER,
         });
@@ -65,7 +69,7 @@ function Signup() {
                 id="First Name"
                 className="form-control"
                 placeholder="First Name"
-                onChange={(e) => setFname(e.target.value)}
+                onChange={(e) => setFname(e.target.value)} // on entering the Fname -> set Fname variable as the one entered
                 required
               />
             </div>
@@ -137,14 +141,14 @@ function Signup() {
             <br />
             <ReCAPTCHA
               sitekey="6LdydssqAAAAAJZ2AUgQPHPPbM5a7tGQM3Php7wS"
-              onChange={onChange}
+              onChange={onChange} // only to debug
             />
             <br />
             <button className="btn btn-primary" type="submit">
               Signup
             </button>
             <button id="link" className="btn btn-link" onClick={handleLoginNav}>
-              Already user? Login!
+              Already user? Login!{/*If user already exists show an option to go to loginpage -> redirects to /login */}
             </button>
           </div>
         </form>
